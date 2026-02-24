@@ -16,14 +16,46 @@ Aplicación web en **PHP 8 + MySQL + JS vanilla + Tailwind CDN**, pensada para D
 
 1. Crear DB MySQL y usuario desde panel DreamHost.
 2. Subir repositorio al hosting.
-3. Configurar Document Root a `/public`.
-4. Crear variables de entorno (o editar `app/config.php`):
+3. Configurar variables de entorno (o editar `app/config.php`):
    - `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `BASE_URL`.
-5. Importar SQL:
+4. Importar SQL:
    - `mysql -uUSER -p DB_NAME < db/schema.sql`
    - `mysql -uUSER -p DB_NAME < db/seed.sql`
-6. Acceder a `/login` con:
+5. Acceder a `/login` con:
    - `admin@local.test` / `Admin123!`
+
+---
+
+## ¿Cómo desplegarlo en servidor compartido? (Document Root y `.htaccess`)
+
+### Opción A (recomendada): apuntar el Document Root a `/public`
+
+En DreamHost Panel:
+
+1. **Websites → Manage Websites → Edit** tu dominio.
+2. En **Web Directory**, apunta al directorio `.../ux_tools/public`.
+3. Guarda cambios.
+
+Con eso, Apache servirá directamente `public/index.php` y los assets de `public/assets/*`.
+
+### Opción B (si no puedes cambiar Document Root): usar `.htaccess` en la raíz
+
+Este repo incluye:
+
+- `/.htaccess` (raíz): reescribe todo hacia `/public`.
+- `/public/.htaccess`: reescribe rutas limpias hacia `public/index.php`.
+
+Así puedes dejar el dominio apuntando al directorio raíz del proyecto y aun así enrutar correctamente.
+
+> Importante: si puedes elegir, usa la **Opción A** porque reduce exposición accidental de archivos fuera de `/public`.
+
+## Verificación rápida de Apache mod_rewrite
+
+Si las rutas limpias no funcionan (`/login`, `/teacher`, etc.):
+
+- Confirma que `.htaccess` está permitido en tu hosting (DreamHost normalmente sí).
+- Revisa que no haya un `.htaccess` de nivel superior sobrescribiendo reglas.
+- Prueba temporalmente abrir `/index.php` para confirmar que PHP sí ejecuta.
 
 ## Funcionalidades clave
 
@@ -40,4 +72,3 @@ Aplicación web en **PHP 8 + MySQL + JS vanilla + Tailwind CDN**, pensada para D
 - Card Sorting asignaciones: `card_assignments.csv`
 - Card Sorting similitud: `card_similarity.csv`
 - Tree Testing respuestas: `tree_testing.csv`
-
