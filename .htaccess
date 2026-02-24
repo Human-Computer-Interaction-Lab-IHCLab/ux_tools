@@ -1,15 +1,8 @@
-# Fallback para hosting compartido cuando NO puedes apuntar el Document Root a /public.
-# Redirige todo al front-controller real en /public.
-
 RewriteEngine On
 
-# Si ya se solicita /public, no reescribir en bucle
+# 1. No tocar si ya estamos en /public
 RewriteRule ^public/ - [L]
 
-# Mantener acceso directo a archivos existentes en raíz (si aplica)
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Enviar todo a /public
-RewriteRule ^(.*)$ public/$1 [L]
+# 2. Redirigir todo a public/index.php
+# Usamos [L,QSA] para que los parámetros GET se mantengan
+RewriteRule ^(.*)$ public/index.php [L,QSA]

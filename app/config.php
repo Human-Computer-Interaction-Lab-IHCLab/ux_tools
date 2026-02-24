@@ -4,7 +4,7 @@ return [
     'db_name' => getenv('DB_NAME') ?: 'ux_tools',
     'db_user' => getenv('DB_USER') ?: 'root',
     'db_pass' => getenv('DB_PASS') ?: '',
-    'base_url' => getenv('BASE_URL') ?: '',
+    'base_url' => getenv('BASE_URL') ?: '/ux-tools',
     'session_name' => getenv('SESSION_NAME') ?: 'ux_tools_session',
     'mail_from' => getenv('MAIL_FROM') ?: 'noreply@local.test',
 ];
