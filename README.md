@@ -1,101 +1,193 @@
-# UX Tools MVP (Card Sorting + Tree Testing)
+# UX Tools from PECESAMA at IHCLAB
 
-Aplicación web en **PHP 8 + MySQL + JS vanilla + Tailwind CDN**, pensada para DreamHost compartido (LAMP).
+## Plataforma Académica para Card Sorting y Tree Testing
 
-## Estructura
+![Organization](https://img.shields.io/badge/IHCLab-Universidad%20de%20Colima-darkgreen)
 
-- `public/index.php`: front controller y router.
-- `app/config.php`, `app/db.php`, `app/auth.php`, `app/helpers.php`.
-- `app/controllers/*`: Auth, Teacher, Team, Participant.
-- `app/views/*`: vistas PHP.
-- `public/assets/app.js`: UI drag&drop y tree testing.
-- `db/schema.sql`: esquema completo.
-- `db/seed.sql`: profesor inicial.
+------------------------------------------------------------------------
 
-## Instalación (DreamHost)
+🇬🇧 English version available here → [README.md](README_EN.md)
 
-1. Crear DB MySQL y usuario desde panel DreamHost.
-2. Subir repositorio al hosting.
-3. Configurar variables de entorno (o editar `app/config.php`):
-   - `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `BASE_URL`.
+------------------------------------------------------------------------
 
-### `BASE_URL` en local vs servidor compartido
+## 🎓 Descripción
 
-En `app/config.php` el fallback actual es:
+UX Tools MVP es una plataforma académica para la enseñanza práctica de:
 
-```php
-'base_url' => getenv('BASE_URL') ?: '/ux-tools',
+-   Card Sorting (Open / Closed / Hybrid)\
+-   Tree Testing (tipo Treejack)
+
+Diseñada para ejecutarse en hosting compartido (LAMP):
+
+-   PHP 8.x (framework ligero)
+-   MySQL
+-   JavaScript moderno (vanilla)
+-   Tailwind CSS (CDN)
+
+------------------------------------------------------------------------
+
+## 🎯 Propósito Académico
+
+El sistema permite:
+
+-   Simular procesos reales de investigación UX
+-   Organizar trabajo colaborativo por equipos
+-   Ejecutar estudios con usuarios externos
+-   Analizar métricas de consenso y navegación
+-   Exportar resultados para análisis estadístico
+
+------------------------------------------------------------------------
+
+## 🧠 Contexto de Investigación
+
+Este sistema fue desarrollado como herramienta docente y entorno
+experimental para:
+
+-   Estudiar modelos mentales y categorización
+-   Evaluar encontrabilidad y arquitectura
+-   Analizar consenso y co-ocurrencia
+-   Comparar resultados inter-equipos
+
+## 📊 Métricas Implementadas
+
+### Card Sorting
+
+* Tasa de finalización
+* Tiempo promedio
+* Categoría dominante por tarjeta
+* % de consenso
+* Matriz de similitud (co-ocurrencia)
+* Export:
+
+  * `card_assignments.csv`
+  * `card_similarity.csv`
+
+### Tree Testing
+
+* Success rate por tarea
+* Tiempo medio / mediana
+* Rutas más frecuentes
+* Export:
+
+  * `tree_testing.csv`
+
+Cita sugerida:
+
+Santana-Mancilla, P. C. (2026). *UX Tools MVP: A lightweight academic
+platform for teaching Card Sorting and Tree Testing*. Facultad de Telemática,
+Universidad de Colima. https://github.com/Human-Computer-Interaction-Lab-IHCLab/ux_tools
+
+------------------------------------------------------------------------
+
+## ⚠️ Disclaimer -- Vibe Coding + IA Asistida
+
+Este proyecto fue desarrollado bajo un enfoque de **Vibe Coding con depuración asistida por IA y supervisión humana**.
+
+Herramientas utilizadas:
+
+* 🧠 **ChatGPT 5.2 Thinking**
+  Para estructuración de requerimientos y generación del prompt maestro para Codex.
+
+* 🤖 **CODEX (Febrero 2026 – Vibe Coding)**
+  Para generación estructural del repositorio y código base.
+
+* 🔎 **Gemini 3 Thinking**
+  Para depuración, identificación de bugs y refinamiento técnico.
+
+El diseño arquitectónico, decisiones pedagógicas y validación funcional fueron realizados manualmente por el autor.
+
+------------------------------------------------------------------------
+
+## 🚀 Instalación
+
+### Crear Base de Datos
+
+Desde el panel:
+
+* Crear DB MySQL
+* Crear usuario
+* Asignar privilegios
+
+### Subir el repositorio
+
+Subir al hosting por FTP/SFTP.
+
+### Configurar `app/config.php`
+
+Variables necesarias:
+
+```
+DB_HOST
+DB_NAME
+DB_USER
+DB_PASS
+BASE_URL
 ```
 
-Guía rápida:
+### Configuración de BASE_URL
 
-- **Local con URL raíz** (`http://localhost:8000`): usar `BASE_URL=` (vacío) o `'base_url' => ''`.
-- **Local en subcarpeta** (`http://localhost/ux-tools/public`): usar `BASE_URL=/ux-tools/public`.
-- **Servidor con Document Root apuntando a `/public`** (recomendado): usar `BASE_URL=` (vacío).
-- **Servidor sin cambiar Document Root y fallback con `/.htaccess`**: usar `BASE_URL=/ux-tools`.
+| Entorno                                          | Valor recomendado  |
+| ------------------------------------------------ | ------------------ |
+| Local raíz (`localhost:8000`)                    | vacío              |
+| Local subcarpeta                                 | `/ux-tools/public` |
+| Servidor con Document Root apuntando a `/public` | vacío              |
+| Servidor sin cambiar Document Root               | `/ux-tools`        |
 
-Regla práctica: `BASE_URL` debe coincidir con el prefijo visible antes de tus rutas (`/login`, `/teacher`, `/p/{token}`) en el navegador.
-4. Importar SQL:
-   - `mysql -uUSER -p DB_NAME < db/schema.sql`
-   - `mysql -uUSER -p DB_NAME < db/seed.sql`
-5. Acceder a `/login` con:
-   - `admin@local.test` / `Admin123!`
-
-Si ya importaste una seed anterior y el login devuelve siempre **"Credenciales inválidas"**, actualiza el hash del admin (la seed inicial previa tenía un hash inválido):
-
-```sql
-UPDATE users
-SET password_hash = "$2y$12$.p32IhkcaGBpX3KV09XTzuX/ldGeT83Nz2dr.jStFoF3fycrpBtWi",
-    is_active = 1
-WHERE email = "admin@local.test";
-```
-
+Regla práctica:
+BASE_URL debe coincidir con el prefijo visible antes de `/login`, `/teacher`, `/p/{token}`.
 
 ---
 
-## ¿Cómo desplegarlo en servidor compartido? (Document Root y `.htaccess`)
+### Importar esquema
 
-### Opción A (recomendada): apuntar el Document Root a `/public`
+```
+mysql -uUSER -p DB_NAME < db/schema.sql
+mysql -uUSER -p DB_NAME < db/seed.sql
+```
 
-En DreamHost Panel:
+### Acceso inicial
 
-1. **Websites → Manage Websites → Edit** tu dominio.
-2. En **Web Directory**, apunta al directorio `.../ux_tools/public`.
-3. Guarda cambios.
+```
+admin@local.test
+Admin123!
+```
 
-Con eso, Apache servirá directamente `public/index.php` y los assets de `public/assets/*`.
+---
 
-### Opción B (si no puedes cambiar Document Root): usar `.htaccess` en la raíz
+## 🌐 Despliegue y Document Root
 
-Este repo incluye:
+### ✅ Opción recomendada
 
-- `/.htaccess` (raíz): reescribe todo hacia `/public`.
-- `/public/.htaccess`: reescribe rutas limpias hacia `public/index.php`.
+Apuntar Document Root a `/public`.
 
-Así puedes dejar el dominio apuntando al directorio raíz del proyecto y aun así enrutar correctamente.
+Reduce exposición accidental de archivos.
 
-> Importante: si puedes elegir, usa la **Opción A** porque reduce exposición accidental de archivos fuera de `/public`.
+### ⚙ Opción alternativa
 
-## Verificación rápida de Apache mod_rewrite
+Usar `.htaccess` en raíz para redirigir a `/public`.
 
-Si las rutas limpias no funcionan (`/login`, `/teacher`, etc.):
+---
 
-- Confirma que `.htaccess` está permitido en tu hosting (DreamHost normalmente sí).
-- Revisa que no haya un `.htaccess` de nivel superior sobrescribiendo reglas.
-- Prueba temporalmente abrir `/index.php` para confirmar que PHP sí ejecuta.
+## 🧩 Funcionalidades Principales
 
-## Funcionalidades clave
+### Profesor
 
-- Activación de estudiantes por token (`/activate/{token}`) y QR fallback.
-- Profesor: CRUD grupos/equipos, importación CSV, plantillas, asignación masiva por equipo.
-- Equipos: configuran y publican instancia, comparten edición, ven resultados y export CSV.
-- Participantes externos: `/p/{token}` sin login.
-- Card Sorting: open/closed/hybrid, validación server-side de tarjetas obligatorias.
-- Tree Testing: captura selección, path_text y tiempo por tarea.
-- Seguridad mínima: `password_hash`, CSRF en panel interno, prepared statements, escaping.
+* CRUD grupos y equipos
+* Importación masiva de estudiantes
+* Activación por token + QR fallback
+* Creación de plantillas
+* Asignación automática a equipos
+* Resultados globales comparativos
 
-## Exportes CSV
+### Equipos
 
-- Card Sorting asignaciones: `card_assignments.csv`
-- Card Sorting similitud: `card_similarity.csv`
-- Tree Testing respuestas: `tree_testing.csv`
+* Configuración de instancia
+* Publicación con token único
+* Exportaciones CSV
+* Visualización de métricas
+
+### Participantes externos
+
+* Acceso sin login (`/p/{token}`)
+* Alias opcional
+* Validaciones server-side
