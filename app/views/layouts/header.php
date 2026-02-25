@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UX Tools</title>
-    <link rel="stylesheet" href="/assets/tailwind.css">
+    <link rel="stylesheet" href="assets/tailwind.css">
 </head>
 <body class="bg-gray-100 text-gray-900">
 <div class="max-w-6xl mx-auto p-4">

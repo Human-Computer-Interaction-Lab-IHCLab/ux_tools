@@ -1,11 +1,11 @@
 Options -Indexes
-
 RewriteEngine On
+RewriteBase /ux-tools/public/
 
-# Si el recurso físico existe (asset, imagen, etc.), servirlo directo
+# Si es un archivo o carpeta real, servirlos y detenerse
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Front controller
-RewriteRule ^ index.php [QSA,L]
+# Si no existe, todo al index.php
+RewriteRule ^(.*)$ index.php [L,QSA]

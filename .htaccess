@@ -1,15 +1,6 @@
-# Fallback para hosting compartido cuando NO puedes apuntar el Document Root a /public.
-# Redirige todo al front-controller real en /public.
-
 RewriteEngine On
+RewriteBase /ux-tools/
 
-# Si ya se solicita /public, no reescribir en bucle
-RewriteRule ^public/ - [L]
-
-# Mantener acceso directo a archivos existentes en raíz (si aplica)
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Enviar todo a /public
-RewriteRule ^(.*)$ public/$1 [L]
+# Si la petición no empieza por /public, la mandamos ahí
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ public/$1 [L,QSA]
