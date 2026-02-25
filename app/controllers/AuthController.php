@@ -16,16 +16,46 @@ class AuthController
         $password = (string)post('password', '');
 
         $stmt = db()->prepare('SELECT * FROM users WHERE email = ? AND is_active = 1');
-        $stmt->execute([$email]);
+        $stmt->execute([strtolower($email)]);
         $user = $stmt->fetch();
 
-        if (!$user || !password_verify($password, $user['password_hash'])) {
+        if (!$user || !self::verifyUserPassword($user, $password)) {
             render('auth/login', ['error' => 'Credenciales inválidas']);
             return;
         }
 
         login_user($user);
         redirect($user['role'] === 'teacher' ? '/teacher' : '/team');
+    }
+
+
+    private static function verifyUserPassword(array $user, string $password): bool
+    {
+        $storedHash = (string)($user['password_hash'] ?? '');
+        if ($storedHash === '') {
+            return false;
+        }
+
+        if (password_verify($password, $storedHash)) {
+            if (password_needs_rehash($storedHash, PASSWORD_DEFAULT)) {
+                self::rehashPassword((int)$user['id'], $password);
+            }
+            return true;
+        }
+
+        // Compatibilidad temporal: algunos despliegues guardaron SHA-256 plano.
+        if (preg_match('/^[a-f0-9]{64}$/i', $storedHash) && hash_equals(strtolower($storedHash), hash('sha256', $password))) {
+            self::rehashPassword((int)$user['id'], $password);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static function rehashPassword(int $userId, string $plainPassword): void
+    {
+        $stmt = db()->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+        $stmt->execute([password_hash($plainPassword, PASSWORD_DEFAULT), $userId]);
     }
 
     public static function logout(): void

@@ -41,6 +41,16 @@ Regla práctica: `BASE_URL` debe coincidir con el prefijo visible antes de tus r
 5. Acceder a `/login` con:
    - `admin@local.test` / `Admin123!`
 
+Si ya importaste una seed anterior y el login devuelve siempre **"Credenciales inválidas"**, actualiza el hash del admin (la seed inicial previa tenía un hash inválido):
+
+```sql
+UPDATE users
+SET password_hash = "$2y$12$.p32IhkcaGBpX3KV09XTzuX/ldGeT83Nz2dr.jStFoF3fycrpBtWi",
+    is_active = 1
+WHERE email = "admin@local.test";
+```
+
+
 ---
 
 ## ¿Cómo desplegarlo en servidor compartido? (Document Root y `.htaccess`)
