@@ -1,0 +1,3 @@
+# Ignorar los archivos de configuración
+app/config.php
+app/config.php.server
