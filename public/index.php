@@ -7,32 +7,10 @@ require_once __DIR__ . '/../app/controllers/TeamController.php';
 require_once __DIR__ . '/../app/controllers/ParticipantController.php';
 
 init_session();
-
-// 1. Obtener la ruta limpia
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-// 2. Eliminar el "/public" de la ruta si existe
-$uri = str_replace('/public', '', $uri);
-
-// 3. Eliminar la carpeta base (ux-tools) de la ruta si existe
-$config = require __DIR__ . '/../app/config.php'; // Asegúrate de cargar tu config
-$base_path = '/' . trim($config['base_url'], '/');
-if ($base_path !== '/' && strpos($uri, $base_path) === 0) {
-    $uri = substr($uri, strlen($base_path));
-}
-
-// 4. Asegurar que siempre empiece con / y no termine en / (excepto si es solo /)
-$uri = '/' . trim($uri, '/');
-
 $method = $_SERVER['REQUEST_METHOD'];
 
-// Debug temporal: Descomenta la siguiente línea para ver qué ruta está llegando al IF
-// die("Ruta procesada: " . $uri); 
-
-if ($uri === '/' || $uri === '') {
-    redirect('/login');
-    exit;
-}
+if ($uri === '/') redirect('/login');
 
 if ($uri === '/login' && $method === 'GET') AuthController::loginForm();
 elseif ($uri === '/login' && $method === 'POST') AuthController::login();

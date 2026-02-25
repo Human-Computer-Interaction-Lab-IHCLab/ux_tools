@@ -18,6 +18,23 @@ Aplicación web en **PHP 8 + MySQL + JS vanilla + Tailwind CDN**, pensada para D
 2. Subir repositorio al hosting.
 3. Configurar variables de entorno (o editar `app/config.php`):
    - `DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`, `BASE_URL`.
+
+### `BASE_URL` en local vs servidor compartido
+
+En `app/config.php` el fallback actual es:
+
+```php
+'base_url' => getenv('BASE_URL') ?: '/ux-tools',
+```
+
+Guía rápida:
+
+- **Local con URL raíz** (`http://localhost:8000`): usar `BASE_URL=` (vacío) o `'base_url' => ''`.
+- **Local en subcarpeta** (`http://localhost/ux-tools/public`): usar `BASE_URL=/ux-tools/public`.
+- **Servidor con Document Root apuntando a `/public`** (recomendado): usar `BASE_URL=` (vacío).
+- **Servidor sin cambiar Document Root y fallback con `/.htaccess`**: usar `BASE_URL=/ux-tools`.
+
+Regla práctica: `BASE_URL` debe coincidir con el prefijo visible antes de tus rutas (`/login`, `/teacher`, `/p/{token}`) en el navegador.
 4. Importar SQL:
    - `mysql -uUSER -p DB_NAME < db/schema.sql`
    - `mysql -uUSER -p DB_NAME < db/seed.sql`
