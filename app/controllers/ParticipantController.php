@@ -47,7 +47,7 @@ class ParticipantController
     public static function submitCard(string $token): void
     {
         $part = $_SESSION['participant'][$token] ?? null;
-        if (!$part) redirect('/p/' . $token);
+        if (!$part) redirect('p/' . $token);
         $payload = json_decode((string)post('payload', '{}'), true) ?: [];
         $cardsStmt = db()->prepare('SELECT id FROM cs_cards WHERE instance_id=?');
         $cardsStmt->execute([$part['instance_id']]);

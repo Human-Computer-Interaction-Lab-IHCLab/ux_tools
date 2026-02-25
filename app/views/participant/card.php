@@ -9,7 +9,7 @@
 <h2 class="font-semibold mt-3">Tarjetas</h2>
 <div id="cards" class="flex flex-wrap gap-2 mt-2"><?php foreach($cards as $c): ?><div draggable="true" data-card-id="<?= $c['id'] ?>" class="card border rounded px-2 py-1 bg-blue-100"><?= e($c['label']) ?></div><?php endforeach; ?></div>
 </div>
-<form method="post" action="/p/<?= e($token) ?>/card" class="mt-4">
+<form method="post" action="card" class="mt-4">
 <input type="hidden" id="payload" name="payload">
 <button class="bg-green-600 text-white px-3 py-2">Enviar</button>
 </form>
